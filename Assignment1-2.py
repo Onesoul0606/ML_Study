@@ -115,6 +115,20 @@ regular_score = np.mean(percept.score(base_wickel_regular, past_wickel_regular))
 print(irregular_score)
 print(regular_score)
 
+# Let's initialize a new perceptron with our custom activation function
+percept = Perceptron(active=rm_activation_function)
+
+# Now let's loop through each data point to train and score
+scores_regular = []
+scores_irregular = []
+for i in range(len(high_frequency_verbs)):
+    percept.learn(base_wickel_HF[:,i, np.newaxis], past_wickel_HF[:,i,np.newaxis])
+    scores_regular.append(np.mean(percept.score(base_wickel_regular, past_wickel_regular)))
+    scores_irregular.append(np.mean(percept.score(base_wickel_irregular, past_wickel_irregular)))
+    print(scores_regular[-1], scores_irregular[-1])
+
+#Exercise 4a)
+#First, we need to extract the medium frequency verbs from the corpus verbs
 base_med_frequency_verbs = []
 past_med_frequency_verbs = []
 for i in verbs:
@@ -122,5 +136,45 @@ for i in verbs:
         base_med_frequency_verbs.append(i[2])
         past_med_frequency_verbs.append(i[3])
 print(base_med_frequency_verbs)
-print(past_med_frequency_verbs)        
+print(past_med_frequency_verbs)  
+
+#Exercise 4b)
+#Second, we need to convert those those verbs into wickelfeatures.
+base_wickel_MF = np.array([activate_word(w) for w in base_med_frequency_verbs]).T
+past_wickel_MF = np.array([activate_word(w) for w in base_med_frequency_verbs]).T
+
+#Exercise 4c)
+#Calculate and store the scores for regular and irregular verbs in the variables scores_irregular_md and scores_regular_md.
+scores_regular_md = []
+scores_irregular_md = []
+for i in range(len(base_med_frequency_verbs)):
+    base_wickel_med_frequency_regular = []
+    past_wickel_med_frequency_regular = []
+    base_wickel_med_frequency_irregular = []
+    past_wickel_med_frequency_irregular = [] 
+    
+    if base_wickel_MF[i] in base_wickel_regular:
+        base_wickel_med_frequency_regular.append(base_wickel_MF[i])
+    elif base_wickel_MF[i] in base_wickel_irregular:
+        base_wickel_med_frequency_irregular.append(base_wickel_MF[i])
+        
+    percept.learn(base_wickel_HF[:,i, np.newaxis], past_wickel_HF[:,i,np.newaxis])
+    scores_regular_md.append(np.mean(percept.score(base_wickel_MF, base_wickel_med_frequency_regular)))
+    scores_irregular.append(np.mean(percept.score(base_wickel_irregular, past_wickel_irregular)))
+    print(scores_regular_md[-1], scores_irregular_md[-1])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
