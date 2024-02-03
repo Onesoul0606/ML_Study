@@ -187,7 +187,27 @@ for i in range(len(base_low_frequency_verbs)):
 #Exercise 5a)
 #Let's see how well we replicated the U-Shape pattern by plotting the simulation output.
 
+data_points = list(range(0,192)) 
+total_scores_regular = scores_regular + scores_regular_md + scores_regular_low
+total_scores_irregular = scores_irregular + scores_irregular_md + scores_irregular_low
 
+plt.figure()
+plt.plot(data_points, total_scores_regular, "o-", label="Regular Verbs", color="red", markersize=2, lw=1)
+plt.plot(data_points, total_scores_irregular, "o-", label='Irregular Verbs', color="blue", markersize=2, lw=1)
+
+plt.axvline(x=10, color="gray", linestyle="--")
+plt.axvline(x=160, color="gray", linestyle="--")
+
+plt.xlabel("Trials", fontsize=14)
+plt.ylabel("Percent of Correct Wickelfeatures", fontsize=14)
+plt.title("RM's Model of the Past Tense", fontsize=18)
+
+plt.ylim(0.5, 1)
+plt.xlim(0, 192)
+plt.legend()
+plt.gca().spines['top'].set_visible(False)
+plt.gca().spines['right'].set_visible(False)
+plt.show()
 
 
 
