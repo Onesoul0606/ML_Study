@@ -75,7 +75,9 @@ for i, word in enumerate(high_frequency_verbs):
     else:
         verbs.append([word, 'Irregular', base_high_frequency_verbs[i], past_high_frequency_verbs[i], 'H'])
     #print(verbs[-1])
-    
+
+#First Stage: High Frequency Verbs    
+
 base_wickel_HF = np.array([activate_word(w) for w in base_high_frequency_verbs]).T #.T: Transpose
 past_wickel_HF = np.array([activate_word(w) for w in past_high_frequency_verbs]).T
 
@@ -127,6 +129,8 @@ for i in range(len(high_frequency_verbs)):
     scores_irregular.append(np.mean(percept.score(base_wickel_irregular, past_wickel_irregular)))
     print(scores_regular[-1], scores_irregular[-1])
 
+#Second Stage: Medium Frequency Verbs
+
 #Exercise 4a)
 #First, we need to extract the medium frequency verbs from the corpus verbs
 base_med_frequency_verbs = []
@@ -147,30 +151,41 @@ past_wickel_MF = np.array([activate_word(w) for w in base_med_frequency_verbs]).
 #Calculate and store the scores for regular and irregular verbs in the variables scores_irregular_md and scores_regular_md.
 scores_regular_md = []
 scores_irregular_md = []
-for i in range(len(base_med_frequency_verbs)):
-    base_wickel_med_frequency_regular = []
-    past_wickel_med_frequency_regular = []
-    base_wickel_med_frequency_irregular = []
-    past_wickel_med_frequency_irregular = [] 
-    
-    if base_wickel_MF[i] in base_wickel_regular:
-        base_wickel_med_frequency_regular.append(base_wickel_MF[i])
-    elif base_wickel_MF[i] in base_wickel_irregular:
-        base_wickel_med_frequency_irregular.append(base_wickel_MF[i])
-        
-    percept.learn(base_wickel_HF[:,i, np.newaxis], past_wickel_HF[:,i,np.newaxis])
-    scores_regular_md.append(np.mean(percept.score(base_wickel_MF, base_wickel_med_frequency_regular)))
-    scores_irregular.append(np.mean(percept.score(base_wickel_irregular, past_wickel_irregular)))
+for i in range(len(base_med_frequency_verbs)): 
+    percept.learn(base_wickel_MF[:,i, np.newaxis], past_wickel_MF[:,i,np.newaxis])
+    scores_regular_md.append(np.mean(percept.score(base_wickel_regular, past_wickel_regular)))
+    scores_irregular_md.append(np.mean(percept.score(base_wickel_irregular, past_wickel_irregular)))
     print(scores_regular_md[-1], scores_irregular_md[-1])
 
+#Third Stage: Low Frequency Verbs
 
+#Exercise 4d)
+#First, we need to extract the low frequency verbs from the corpus verbs.
+base_low_frequency_verbs = []
+past_low_frequency_verbs = []
 
+for i in verbs:
+    if i[4] == 'L':
+        base_low_frequency_verbs.append(i[2])
+        past_low_frequency_verbs.append(i[3])
 
+#Exercise 4e)
+#Second, we need to convert those those verbs into wickelfeatures.
+base_wickel_LF = np.array([activate_word(w) for w in base_low_frequency_verbs]).T
+past_wickel_LF = np.array([activate_word(w) for w in past_low_frequency_verbs]).T
 
+#Exercise 4f)
+#Calculate and store the scores for regular and irregular verbs in the variables scores_irregular_low and scores_regular_low.
+scores_regular_low = []
+scores_irregular_low = []
+for i in range(len(base_low_frequency_verbs)): 
+    percept.learn(base_wickel_LF[:,i, np.newaxis], past_wickel_LF[:,i,np.newaxis])
+    scores_regular_low.append(np.mean(percept.score(base_wickel_regular, past_wickel_regular)))
+    scores_irregular_low.append(np.mean(percept.score(base_wickel_irregular, past_wickel_irregular)))
+    print(scores_regular_low[-1], scores_irregular_low[-1])
 
-
-
-
+#Exercise 5a)
+#Let's see how well we replicated the U-Shape pattern by plotting the simulation output.
 
 
 
